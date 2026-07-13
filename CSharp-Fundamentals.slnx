@@ -2,4 +2,5 @@
   <Project Path="01_Calculator/01_Calculator.csproj" />
   <Project Path="02_NumberGuesser/02_NumberGuesser.csproj" />
   <Project Path="03_ToDoList/03_ToDoList.csproj" />
+  <Project Path="04_TaskOrganizer/04_TaskOrganizer.csproj" />
 </Solution>
