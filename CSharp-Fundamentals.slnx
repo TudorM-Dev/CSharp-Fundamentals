@@ -4,4 +4,5 @@
   <Project Path="03_ToDoList/03_ToDoList.csproj" />
   <Project Path="04_TaskOrganizer/04_TaskOrganizer.csproj" />
   <Project Path="05_FinanceTracker/05_FinanceTracker.csproj" />
+  <Project Path="06_HardwareInventory/06_HardwareInventory.csproj" />
 </Solution>
