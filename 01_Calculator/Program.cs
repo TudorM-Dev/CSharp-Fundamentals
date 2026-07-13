@@ -4,9 +4,6 @@
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Proiect Tudor Mutica");
-            Console.WriteLine("----------------------");
-            Console.WriteLine("Program de calculator interactiv");
 
             do
             {
