@@ -1,4 +1,6 @@
 ﻿using System.Reflection;
+using System.Reflection.Metadata;
+using System.Text.Json;
 
 namespace _05_FinanceTracker
 {
@@ -16,20 +18,76 @@ namespace _05_FinanceTracker
         public string Description { get; set; } = "No description.";
     }
 
+   
 
 
     internal class Program
     {
+
+        static List<Transaction> transactionList = new List<Transaction>();
 
         static void SetCategory(Transaction trans, string categ)
         {
             if (Enum.TryParse(categ, true, out Category result)) trans.Category = result;
             else trans.Category = Category.Other;
         }
+        static void ExportData()
+        {
+            string jsonToSave = JsonSerializer.Serialize(transactionList, new JsonSerializerOptions { WriteIndented = true });
+
+
+            File.WriteAllText($"FINANTE - {DateTime.Now:yyyy-MM-dd_HH-mm-ss}.json", jsonToSave);
+
+            Console.WriteLine("----EXPORT SUCCESSFULLY----");
+        }
+
+        static void ImportData()
+        {
+            string[] files = Directory.GetFiles(".", "FINANTE - *.json");
+
+            if (files.Length == 0)
+            {
+                Console.WriteLine("NO FILES WERE FOUND");
+                return;
+            }
+
+
+            Console.WriteLine("Files found for import:");
+            for (int i = 0; i < files.Length; i++)
+                Console.Write($"{i + 1}) {Path.GetFileNameWithoutExtension(files[i])}");
+
+            Console.WriteLine("Enter the index of the file you want to import: ");
+            string selectedFile = files[Convert.ToInt32(Console.ReadLine()) - 1];
+            string jsonLoaded = File.ReadAllText(selectedFile);
+
+            transactionList = JsonSerializer.Deserialize<List<Transaction>>(jsonLoaded);
+            Console.WriteLine("----IMPORT SUCCESSFULLY----");
+
+        }
+
+        static void DeleteData()
+        {
+            string[] files = Directory.GetFiles(".", "FINANTE - *.json");
+
+            if (files.Length == 0)
+            {
+                Console.WriteLine("NO FILES WERE FOUND");
+                return;
+            }
+
+
+            Console.WriteLine("Files found for import:");
+            for (int i = 0; i < files.Length; i++)
+                Console.Write($"{i + 1}) {Path.GetFileNameWithoutExtension(files[i])}");
+
+            Console.WriteLine("Enter the index of the file you want to DELETE: ");
+            string selectedFile = files[Convert.ToInt32(Console.ReadLine()) - 1];
+            File.Delete(selectedFile);
+            Console.WriteLine("----DELETED SUCCESSFULLY----");
+        }
 
         static void Main(string[] args)
         {
-            List<Transaction> transactionList = new List<Transaction>();
             string option = "";
             //string title = "";
             int index = 0;
@@ -41,7 +99,7 @@ namespace _05_FinanceTracker
             while (option != "EXIT")
             {
                 Console.WriteLine("");
-                Console.WriteLine("Option: ADD, REMOVE, EDIT, LIST, EXIT");
+                Console.WriteLine("Option: ADD, REMOVE, EDIT, LIST, IMPORT, EXPORT, DELETE, RESET, EXIT");
                 option = Console.ReadLine().ToUpper();
 
                 switch (option)
@@ -117,6 +175,25 @@ namespace _05_FinanceTracker
                         if (input == "") input = "No description.";
                         transactionList[index - 1].Description = input;
 
+                        break;
+
+                    case ("EXPORT"):
+                        ExportData();
+                        break;
+
+                    case ("IMPORT"):
+                        ImportData();
+                        break;
+                    case ("DELETE"):
+                        DeleteData();
+                        break;
+                    case ("RESET"):
+                        Console.Write("Are you SURE you want to delete all of the transactions?(Y/N): ");
+                        if (Console.ReadLine() == "Y")
+                        {
+                            transactionList.Clear();
+                            Console.WriteLine("---RESETED---");
+                        }
                         break;
 
                     default: break;
